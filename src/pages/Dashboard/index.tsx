@@ -14,10 +14,19 @@ interface GithubRepository{
   }
 }
  export const Dashboard: React.FC = () => {
-
-   const [repos,setRepos] = React.useState<GithubRepository[]>([]);
+   const [repos,setRepos] = React.useState<GithubRepository[]>( () => {
+     const storageRepos = localStorage.getItem('@GitCollection:repositorios'); // Criando o localStorage
+     if(storageRepos){
+       return JSON.parse(storageRepos);
+     }
+     return [];
+   });
    const [newRepo, setNewRepo] = React.useState('');
    const [inputError, setInputError] = React.useState('')
+
+   React.useEffect(() => { // Criando o local Storage useEffect
+      localStorage.setItem('@GitCollection:repositorios', JSON.stringify(repos));
+   }, [repos]);
 
 
    function handleInputChange(event: React.ChangeEvent<HTMLInputElement>): void{
@@ -25,7 +34,7 @@ interface GithubRepository{
     setNewRepo(event.target.value);
 
    }
-  async function handleAddRepo(
+  async function handleAddRepo(    // Função tratando a API DO GITHUB!
     event: React.FormEvent<HTMLFormElement>,
     ): Promise<void> {
      event.preventDefault();
@@ -58,7 +67,9 @@ interface GithubRepository{
       <Repos>
 
        {repos.map(repository => (
-          <a href="/repositories" key={repository.full_name}>
+          // eslint-disable-next-line react/jsx-no-target-blank
+          <a href={`https://github.com/${repository.full_name}`} target="_blank"
+          key={repository.full_name}>
           <img 
           src={repository.owner.avatar_url}
           alt={repository.owner.login} />
