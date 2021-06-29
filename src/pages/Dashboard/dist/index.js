@@ -49,6 +49,7 @@ var fi_1 = require("react-icons/fi");
 var styles_1 = require("./styles");
 var logo_svg_1 = require("../../assets/logo.svg");
 var api_1 = require("../../services/api");
+var react_router_dom_1 = require("react-router-dom");
 exports.Dashboard = function () {
     var _a = react_1["default"].useState(function () {
         var storageRepos = localStorage.getItem('@GitCollection:repositorios'); // Criando o localStorage
@@ -95,9 +96,7 @@ exports.Dashboard = function () {
             react_1["default"].createElement("input", { type: "text", placeholder: "username/repository_name", onChange: handleInputChange }),
             react_1["default"].createElement("button", { type: "submit" }, "Buscar")),
         inputError && react_1["default"].createElement(styles_1.Error, null, inputError),
-        react_1["default"].createElement(styles_1.Repos, null, repos.map(function (repository) { return (
-        // eslint-disable-next-line react/jsx-no-target-blank
-        react_1["default"].createElement("a", { href: "https://github.com/" + repository.full_name, target: "_blank", key: repository.full_name },
+        react_1["default"].createElement(styles_1.Repos, null, repos.map(function (repository) { return (react_1["default"].createElement(react_router_dom_1.Link, { to: "/repositories/" + repository.full_name, key: repository.full_name },
             react_1["default"].createElement("img", { src: repository.owner.avatar_url, alt: repository.owner.login }),
             react_1["default"].createElement("div", null,
                 react_1["default"].createElement("strong", null, repository.full_name),

@@ -23,8 +23,9 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body{
-      background: #F0F0F5 url(${ImgBack}) no-repeat 70% top;
+      background: #8e44ad url(${ImgBack}) no-repeat 70% top;
       -webkit-font-smoothing: antialiased;
+
   }
 
   #root{
