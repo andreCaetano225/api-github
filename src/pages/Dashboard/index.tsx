@@ -24,6 +24,7 @@ interface GithubRepository{
    });
    const [newRepo, setNewRepo] = React.useState('');
    const [inputError, setInputError] = React.useState('')
+   const formEl = React.useRef<HTMLFormElement | null>(null);
 
    React.useEffect(() => { // Criando o local Storage useEffect
       localStorage.setItem('@GitCollection:repositorios', JSON.stringify(repos));
@@ -44,26 +45,34 @@ interface GithubRepository{
        setInputError('Informe o username/repositório');
        return;
      }
-     const response = await api.get<GithubRepository>(`repos/${newRepo}`);
+     try{
+      const response = await api.get<GithubRepository>(`repos/${newRepo}`);
 
-     const repository = response.data;
-
-     setRepos([...repos, repository]);
-     setNewRepo('')
-
+      const repository = response.data;
+ 
+      setRepos([...repos, repository]);
+      formEl.current?.reset();
+      setNewRepo('')
+      setInputError('');
+ 
+     } catch {
+      setInputError('Repositorio não encontrato');
+     }
    }
   return (
     <>
       <img src={Logo} alt="GitCollection" />
       <Title>Catalogo de repositórios do Github</Title>
 
-      <Form hasError={Boolean(inputError)} onSubmit={handleAddRepo}>
+      <Form ref={formEl} hasError={Boolean(inputError)} onSubmit={handleAddRepo}>
         <input type="text" placeholder="username/repository_name" 
         onChange={handleInputChange}/>
         <button type="submit">Buscar</button>
       </Form>
 
-      {inputError && <Error>{inputError}</Error>}
+      {inputError && <Error>
+         {inputError}
+        </Error>}
 
       <Repos>
 

@@ -60,6 +60,7 @@ exports.Dashboard = function () {
     }), repos = _a[0], setRepos = _a[1];
     var _b = react_1["default"].useState(''), newRepo = _b[0], setNewRepo = _b[1];
     var _c = react_1["default"].useState(''), inputError = _c[0], setInputError = _c[1];
+    var formEl = react_1["default"].useRef(null);
     react_1["default"].useEffect(function () {
         localStorage.setItem('@GitCollection:repositorios', JSON.stringify(repos));
     }, [repos]);
@@ -68,23 +69,34 @@ exports.Dashboard = function () {
     }
     function handleAddRepo(// Função tratando a API DO GITHUB!
     event) {
+        var _a;
         return __awaiter(this, void 0, Promise, function () {
-            var response, repository;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var response, repository, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         event.preventDefault();
                         if (!newRepo) {
                             setInputError('Informe o username/repositório');
                             return [2 /*return*/];
                         }
-                        return [4 /*yield*/, api_1.api.get("repos/" + newRepo)];
+                        _c.label = 1;
                     case 1:
-                        response = _a.sent();
+                        _c.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, api_1.api.get("repos/" + newRepo)];
+                    case 2:
+                        response = _c.sent();
                         repository = response.data;
                         setRepos(__spreadArrays(repos, [repository]));
+                        (_a = formEl.current) === null || _a === void 0 ? void 0 : _a.reset();
                         setNewRepo('');
-                        return [2 /*return*/];
+                        setInputError('');
+                        return [3 /*break*/, 4];
+                    case 3:
+                        _b = _c.sent();
+                        setInputError('Repositorio não encontrato');
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -92,7 +104,7 @@ exports.Dashboard = function () {
     return (react_1["default"].createElement(react_1["default"].Fragment, null,
         react_1["default"].createElement("img", { src: logo_svg_1["default"], alt: "GitCollection" }),
         react_1["default"].createElement(styles_1.Title, null, "Catalogo de reposit\u00F3rios do Github"),
-        react_1["default"].createElement(styles_1.Form, { hasError: Boolean(inputError), onSubmit: handleAddRepo },
+        react_1["default"].createElement(styles_1.Form, { ref: formEl, hasError: Boolean(inputError), onSubmit: handleAddRepo },
             react_1["default"].createElement("input", { type: "text", placeholder: "username/repository_name", onChange: handleInputChange }),
             react_1["default"].createElement("button", { type: "submit" }, "Buscar")),
         inputError && react_1["default"].createElement(styles_1.Error, null, inputError),
